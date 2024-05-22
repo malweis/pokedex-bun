@@ -4,13 +4,13 @@ import { NamedAPIResource, NamedAPIResourceList, Pokemon, PokemonClient, Utility
 import axios from 'axios';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useRouter } from 'next/navigation';
+
 import { Button, Skeleton } from '@mui/material';
 import PokemonCard from '@/components/PokemonCard';
 import styles from '@/app/page.module.css';
 
 export default function Home() {
-  const router = useRouter()
+ 
 
   const [pokemonList, setPokemonList] = useState<NamedAPIResource[]>([]);
   const [nextUrl, setNextUrl] = useState<string | null>(null);
@@ -62,9 +62,9 @@ export default function Home() {
           <GridContainer >
             {
               pokemonList.map((pokemon) => (
-                <Button key={pokemon.name} type="button" onClick={() => router.push(`/pokemon/${pokemon.name}`)}>
-                  <PokemonCard name={pokemon.name} />
-                </Button>
+              
+                  <PokemonCard name={pokemon.name} key={pokemon.name} />
+               
               ))
             }
           </GridContainer>
