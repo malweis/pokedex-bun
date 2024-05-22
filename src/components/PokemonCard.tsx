@@ -39,6 +39,7 @@ const Card = styled.div`
   align-items: center;
   cursor: pointer;
   min-width: 15rem;
+  max-width: 15rem;
 `;
 
 const Span = styled.span`
@@ -132,8 +133,8 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
           <SkeletonImage variant="rectangular"  height={150} width={150} />
           <Skeleton variant="text" width="60%" />
           <TypeContainer>
-            <SkeletonType variant="text" />
-            <SkeletonType variant="text" />
+            <SkeletonType variant="text"  height={60} />
+            <SkeletonType variant="text" height={60}/>
           </TypeContainer>
         </>
       ) : pokemonData ? (
