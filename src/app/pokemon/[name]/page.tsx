@@ -4,9 +4,11 @@ import { useAppSelector } from "@/utils/usePokemon";
 import Image from "next/image";
 import {
   Ability,
+  NamedAPIResource,
   Pokemon,
   PokemonClient,
   PokemonSpecies,
+  Type,
   UtilityClient,
 } from "pokenode-ts";
 import {
@@ -74,6 +76,9 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
   const [abilityData, setAbilityData] = useState<Ability | null>(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
+  const [typeData, setTypeData] = useState<Type[]>([]);
+  const [damageRelations, setDamageRelations] = useState({} as any);
+
 
   const handleClick = (event : any) => {
     setAnchorEl(event.currentTarget);
@@ -117,11 +122,57 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
         setAbilityData(data);
       }
     };
+    const fetchTypeData = async () => {
+      if (selectedPokemon && selectedPokemon.types.length > 0) {
+        const typeResponses = await Promise.all(
+          selectedPokemon.types.map((type) => fetch(type.type.url))
+        );
+        const typeData = await Promise.all(typeResponses.map((res) => res.json()));
+        setTypeData(typeData);
+      }
+    };
+  
+    fetchTypeData();
 
     fetchAbility();
     fetchEvoChain();
     fetchSpecies();
+
   }, []);
+
+  const combineDamageRelations = () => {
+    if (typeData.length === 0) return {};
+  
+    const combined: {
+      double_damage_from: NamedAPIResource[],
+      double_damage_to: NamedAPIResource[],
+      // add other damage relations as needed
+    } = {
+      double_damage_from: [],
+      double_damage_to: [],
+      // add other damage relations as needed
+    };
+  
+    typeData.forEach((type) => {
+      combined.double_damage_from.push(...type.damage_relations.double_damage_from);
+      combined.double_damage_to.push(...type.damage_relations.double_damage_to);
+    });
+  
+    const superEffectiveFrom = combined.double_damage_from.filter(
+      (type, index, self) =>
+        self.findIndex((t) => t.name === type.name) !== index
+    );
+    const superEffectiveTo = combined.double_damage_to.filter(
+      (type, index, self) =>
+        self.findIndex((t) => t.name === type.name) !== index
+    );
+  
+    return {
+      ...combined,
+      super_effective_from: superEffectiveFrom,
+      super_effective_to: superEffectiveTo,
+    };
+  };
 
   const getTypeColor = (type: string) => {
     const typeColors: { [key: string]: string } = {
@@ -155,6 +206,10 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
   useEffect(() => {
     console.log(selectedPokemon);
   }, []);
+
+  useEffect(() => {
+    setDamageRelations(combineDamageRelations());
+  }, [typeData]);
 
   return (
     <Main>
@@ -239,6 +294,70 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
                 </ContainerData>
               </ContainerMainData>
             </ContainerCol>
+            <ContainerCol>
+              {   damageRelations.double_damage_to && damageRelations.double_damage_to.length > 0 && (
+                <ContainerCol>
+                  <p>Strong Against:</p>
+                  <ContainerData>
+                    {damageRelations.double_damage_to.map((type: any) => (
+                     <TypeShow
+                     key={type.name}
+                     color={getTypeColor(type.name)}
+                   >
+                      {type.name.toUpperCase()}
+                    </TypeShow>
+                    ))}
+                  </ContainerData>
+                </ContainerCol>
+              )}
+                {   damageRelations.double_damage_from && damageRelations.double_damage_from.length > 0 && (
+                <ContainerCol>
+                  <p>Weak Against:</p>
+                  <ContainerData>
+                    {damageRelations.double_damage_from.map((type: any) => (
+                     <TypeShow
+                     key={type.name}
+                     color={getTypeColor(type.name)}
+                   >
+                      {type.name.toUpperCase()}
+                    </TypeShow>
+                    ))}
+                  </ContainerData>
+                </ContainerCol>
+              )}
+              
+              {damageRelations.super_effective_from && damageRelations.super_effective_from.length > 0 && (
+                <ContainerCol>
+                  <p>Super Weak Against:</p>
+                  <ContainerData>
+                    {damageRelations.super_effective_from.map((type: any) => (
+                      <TypeShow
+                      key={type.name}
+                      color={getTypeColor(type.name)}
+                    >
+                       {type.name.toUpperCase()}
+                     </TypeShow>
+                    ))}
+                  </ContainerData>
+                </ContainerCol>
+              )}
+              
+              {damageRelations.super_effective_to && damageRelations.super_effective_to.length > 0 && (
+                <ContainerCol>
+                  <p>Super Strong Against:</p>
+                  <ContainerData>
+                    {damageRelations.super_effective_to.map((type: any) => (
+                       <TypeShow
+                       key={type.name}
+                       color={getTypeColor(type.name)}
+                     >
+                        {type.name.toUpperCase()}
+                      </TypeShow>
+                    ))}
+                  </ContainerData>
+                </ContainerCol>
+              )}
+            </ContainerCol>
           </ContainerData>
           {selectedPokemon.stats.map((stat: any) => (
             <Box key={stat.stat.name} sx={{ width: "100%", mr: 1, mb: 1 }}>
@@ -276,4 +395,20 @@ const ContainerImage = styled.div`
   justify-content: center;
   align-items: center;
   background-color: gainsboro;
+`;
+
+const TypeShow = styled.span<{ color: string; }>`
+  background-color: ${(props) => props.color};
+  border-radius: 4px;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  font-size: 14px;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 5rem;
+  max-width: 5rem;
+  
 `;
