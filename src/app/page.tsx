@@ -58,7 +58,7 @@ export default function Home() {
       {/* Rest of your code */}
     
         <div >
-          <h1>Pokemon List</h1>
+          <h1>React Pokedex</h1>
           <GridContainer >
             {
               pokemonList.map((pokemon) => (
@@ -82,5 +82,5 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  gap: 10px;
+  gap: 2rem;
 `;

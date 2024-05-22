@@ -5,7 +5,10 @@
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
- background-color: white;
+  background-color: white;
+ background-image: url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png);
+ color: black;
+
 }
 
 .description {
