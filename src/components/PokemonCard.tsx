@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux'; // import useDispatch
+
 import { NamedAPIResource, Pokemon, PokemonClient } from "pokenode-ts";
-import { useSelectPokemon } from "../utils/usePokemon"; // replace with your actual path
+import { selectPokemon } from '../store/pokemon/pokemonSlice'; // replace with your actual path
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -14,7 +16,7 @@ interface CardProps {
   typeColor: string;
 }
 
-const Type = styled.span<{ color: string; isSingle: boolean }>`
+const Type = styled.span<{ color: string; issingle: string }>`
   background-color: ${(props) => props.color};
   border-radius: 4px;
   padding: 0.5rem;
@@ -25,9 +27,8 @@ const Type = styled.span<{ color: string; isSingle: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${(props) => (props.isSingle ? "50%" : "100%")};
+  width: ${(props) => (props.issingle === "true" ? "50%" : "100%")};
 `;
-
 const Card = styled.div`
   width: 100%;
   border: 1px solid gainsboro;
@@ -81,6 +82,7 @@ const SkeletonType = styled(Skeleton)`
 const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
   const [pokemonData, setPokemonData] = useState<any>(null);
   const [loading , setLoading] = useState<boolean>(false);
+    const dispatch = useDispatch();
   const router = useRouter();
 
   useEffect(() => {
@@ -127,7 +129,11 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
   };
 
   return (
-    <Card onClick={() => router.push(`/pokemon/${name}`)}>
+    <Card onClick={() => {
+      router.push(`/pokemon/${name}`);
+     // dispatch the action to set the selected Pokemon
+      dispatch(selectPokemon(pokemonData));
+    }}>
       {loading ? (
         <>
           <SkeletonImage variant="rectangular"  height={150} width={150} />
@@ -153,14 +159,14 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
           <Span>{name.charAt(0).toUpperCase() + name.slice(1)}</Span>{" "}
           <TypeContainer>
             {pokemonData.types.map((type: any) => (
-              <Type
-                key={type.type.name}
-                color={getTypeColor(type.type.name)}
-                isSingle={pokemonData.types.length === 1}
-              >
-                {type.type.name.charAt(0).toUpperCase() +
-                  type.type.name.slice(1)}
-              </Type>
+             <Type
+             key={type.type.name}
+             color={getTypeColor(type.type.name)}
+             issingle={pokemonData.types.length === 1 ? "true" : "false"}
+           >
+             {type.type.name.charAt(0).toUpperCase() +
+               type.type.name.slice(1)}
+           </Type>
             ))}
           </TypeContainer>
           {/* Add more information as needed */}
