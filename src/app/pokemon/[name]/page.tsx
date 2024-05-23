@@ -94,7 +94,7 @@ const AbilityData = styled.div`
 const Description = styled.div`
   width: 300px;
 `;
-const EvolutionChain = styled.div`
+const EvolutionChainContainer = styled.div`
   display: grid;
   gap: 1rem;
   width: 100%;
@@ -169,20 +169,7 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
     setAnchorEl(null);
     setOpen(false);
   };
-  const fetchEvoChain = async () => {
-    setLoading(true);
-    const api = new UtilityClient();
-    try {
-      const pokemon: EvolutionChain = await api.getResourceByUrl(
-        speciesData?.evolution_chain.url ?? ""
-      );
-      setEvolutionChain(pokemon);
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching Pokemon data:", error);
-    }
-  };
+ 
 
   useEffect(() => {
     const fetchSpecies = async () => {
@@ -221,43 +208,9 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
     fetchAbility();
 
     fetchSpecies();
-  }, []);
+  }, [params.name, selectedPokemon]); // add params.name and selectedPokemon to the dependency array
 
-  const combineDamageRelations = () => {
-    if (typeData.length === 0) return {};
-
-    const combined: {
-      double_damage_from: NamedAPIResource[];
-      double_damage_to: NamedAPIResource[];
-      // add other damage relations as needed
-    } = {
-      double_damage_from: [],
-      double_damage_to: [],
-      // add other damage relations as needed
-    };
-
-    typeData.forEach((type) => {
-      combined.double_damage_from.push(
-        ...type.damage_relations.double_damage_from
-      );
-      combined.double_damage_to.push(...type.damage_relations.double_damage_to);
-    });
-
-    const superEffectiveFrom = combined.double_damage_from.filter(
-      (type, index, self) =>
-        self.findIndex((t) => t.name === type.name) !== index
-    );
-    const superEffectiveTo = combined.double_damage_to.filter(
-      (type, index, self) =>
-        self.findIndex((t) => t.name === type.name) !== index
-    );
-
-    return {
-      ...combined,
-      super_effective_from: superEffectiveFrom,
-      super_effective_to: superEffectiveTo,
-    };
-  };
+  
 
   const getTypeColor = (type: string) => {
     const typeColors: { [key: string]: string } = {
@@ -289,10 +242,59 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
   const normalise = (value: number) => (value * 100) / 255;
 
   useEffect(() => {
+    const fetchEvoChain = async () => {
+      setLoading(true);
+      const api = new UtilityClient();
+      try {
+        const pokemon: EvolutionChain = await api.getResourceByUrl(
+          speciesData?.evolution_chain.url ?? ""
+        );
+        setEvolutionChain(pokemon);
+  
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching Pokemon data:", error);
+      }
+    };
     fetchEvoChain();
   }, [speciesData]);
 
   useEffect(() => {
+    const combineDamageRelations = () => {
+      if (typeData.length === 0) return {};
+  
+      const combined: {
+        double_damage_from: NamedAPIResource[];
+        double_damage_to: NamedAPIResource[];
+        // add other damage relations as needed
+      } = {
+        double_damage_from: [],
+        double_damage_to: [],
+        // add other damage relations as needed
+      };
+  
+      typeData.forEach((type) => {
+        combined.double_damage_from.push(
+          ...type.damage_relations.double_damage_from
+        );
+        combined.double_damage_to.push(...type.damage_relations.double_damage_to);
+      });
+  
+      const superEffectiveFrom = combined.double_damage_from.filter(
+        (type, index, self) =>
+          self.findIndex((t) => t.name === type.name) !== index
+      );
+      const superEffectiveTo = combined.double_damage_to.filter(
+        (type, index, self) =>
+          self.findIndex((t) => t.name === type.name) !== index
+      );
+  
+      return {
+        ...combined,
+        super_effective_from: superEffectiveFrom,
+        super_effective_to: superEffectiveTo,
+      };
+    };
     setDamageRelations(combineDamageRelations());
   }, [typeData]);
 
@@ -351,7 +353,7 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
                     .filter((entry) => entry.language.name === "en")
                     .slice(-1)
                     .map((entry, index) => (
-                      <Description>
+                      <Description key={index}>
                         <p key={index}>{entry.flavor_text}</p>
                       </Description>
                     ))}
@@ -498,13 +500,13 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
             {evolutionChain && (
               <ContainerCol>
                 <p>Evolution Chain:</p>
-                <EvolutionChain>
+                <EvolutionChainContainer>
                   {evolutionData.map((pokemon, index) => (
                     
                       <PokemonCard name={pokemon} key={index}/>
                     
                   ))}
-                </EvolutionChain>
+                </EvolutionChainContainer>
               </ContainerCol>
             )}
           </ContainerEvolutions>

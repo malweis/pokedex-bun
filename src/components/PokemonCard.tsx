@@ -97,7 +97,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ name }) => {
     };
 
     fetchData();
-  }, []);
+  }, [name]);
 
   const getTypeColor = (type: string) => {
     const typeColors: { [key: string]: string } = {

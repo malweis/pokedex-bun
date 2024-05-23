@@ -55,6 +55,12 @@ const PokemonDetails = () => {
     (state) => state.pokemon.selectedPokemon
   );
 
+ 
+
+  
+ 
+useEffect(() => {
+
   const fetchAllMoves = async () => {
     const api = new MoveClient();
     const movesData : Move[] = [];
@@ -73,11 +79,8 @@ const PokemonDetails = () => {
    
   };
 
-  
- 
-useEffect(() => {
   fetchAllMoves();
-} , [])
+} , [selectedPokemon?.moves])
 
 useEffect(() => {
   const newRows = moves.map((move, index) => {
