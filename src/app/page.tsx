@@ -170,4 +170,8 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   grid-template-rows: repeat(4, 1fr);
   gap: 2rem;
+  @media (max-width: 600px) {
+    
+    margin-left: 2rem;
+  }
 `;
