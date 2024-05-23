@@ -16,6 +16,7 @@ import {
 import {
   Box,
   Button,
+  ButtonBase,
   LinearProgress,
   Popover,
   Typography,
@@ -26,6 +27,7 @@ import styled from "styled-components";
 import PokemonCard from "@/components/PokemonCard";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Main = styled.main`
   display: flex;
@@ -131,6 +133,16 @@ display: grid;
     place-items: center;
 
 `;
+const DataAndButton = styled.div`
+  display: flex;
+  gap: 5rem;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+`;
 
 
 const PokemonDetails = ({ params }: { params: { name: string } }) => {
@@ -147,6 +159,7 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
   const [evolutionChain, setEvolutionChain] = useState<EvolutionChain | null>(
     null
   );
+  const router = useRouter();
   const [evolutionData, setEvolutionData] = useState<any[]>([]);
 
   const handleClick = (event: any) => {
@@ -331,16 +344,20 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
                 quality={100}
               />
             </ContainerImage>
+            
             <ContainerColPokemon>
-              {speciesData &&
-                speciesData.flavor_text_entries
-                  .filter((entry) => entry.language.name === "en")
-                  .slice(-1)
-                  .map((entry, index) => (
-                    <Description>
-                      <p key={index}>{entry.flavor_text}</p>
-                    </Description>
-                  ))}
+            <DataAndButton >
+              <Button style={{ color: 'white', backgroundColor: 'blue'}} onClick={() => { router.push(`/ability/${params.name}`)} } >Abilities</Button>
+                {speciesData &&
+                  speciesData.flavor_text_entries
+                    .filter((entry) => entry.language.name === "en")
+                    .slice(-1)
+                    .map((entry, index) => (
+                      <Description>
+                        <p key={index}>{entry.flavor_text}</p>
+                      </Description>
+                    ))}
+            </DataAndButton>
               <ContainerMainData>
                 <ContainerCol>
                   <p>Height:</p> <p>{selectedPokemon.height}</p>
