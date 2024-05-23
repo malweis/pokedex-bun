@@ -63,20 +63,16 @@ useEffect(() => {
 
   const fetchAllMoves = async () => {
     const api = new MoveClient();
-    const movesData : Move[] = [];
-  
+    
     for (const moveData of selectedPokemon?.moves ?? []) {
       const moveName = moveData.move.name;
       try {
         const response = await api.getMoveByName(moveName);
-        movesData.push(response);
-        setMoves(movesData);
+        setMoves(prevMoves => [...prevMoves, response]);
       } catch (error) {
         console.error(`Error fetching data for move ${moveName}:`, error);
       }
     }
- 
-   
   };
 
   fetchAllMoves();
@@ -154,6 +150,7 @@ useEffect(() => {
      <Link href="/">
  
     <ArrowBackIcon style={{ color: 'blue' }} />
+    </Link>
     <DataGrid
   rows={rows}
   columns={columns}
@@ -164,7 +161,7 @@ useEffect(() => {
   }}
 />
  
-</Link>
+
       
       
     </Main>
