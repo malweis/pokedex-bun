@@ -24,6 +24,8 @@ import { IconButton } from "@mui/material";
 import { Info } from "@mui/icons-material";
 import styled from "styled-components";
 import PokemonCard from "@/components/PokemonCard";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from "next/link";
 
 const Main = styled.main`
   display: flex;
@@ -129,6 +131,7 @@ display: grid;
     place-items: center;
 
 `;
+
 
 const PokemonDetails = ({ params }: { params: { name: string } }) => {
   const selectedPokemon = useAppSelector(
@@ -305,6 +308,12 @@ const PokemonDetails = ({ params }: { params: { name: string } }) => {
 
   return (
     <Main>
+     <Link href="/">
+ 
+    <ArrowBackIcon style={{ color: 'blue' }} />
+ 
+</Link>
+      
       {selectedPokemon && (
         <Maincontainer>
           <h2>
