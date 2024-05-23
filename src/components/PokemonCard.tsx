@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux'; // import useDispatch
 
-import { NamedAPIResource, Pokemon, PokemonClient } from "pokenode-ts";
+import {   PokemonClient } from "pokenode-ts";
 import { selectPokemon } from '../store/pokemon/pokemonSlice'; // replace with your actual path
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Skeleton, TextField } from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 interface PokemonCardProps {
   name: string;
 }
 
-interface CardProps {
-  typeColor: string;
-}
+
 
 const Type = styled.span<{ color: string; issingle: string }>`
   background-color: ${(props) => props.color};

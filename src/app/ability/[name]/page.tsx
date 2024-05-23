@@ -1,32 +1,16 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useAppSelector } from "@/utils/usePokemon";
-import Image from "next/image";
+
 import {
-  Ability,
-  EVOLUTION_TRIGGERS,
-  EvolutionChain,
+
   Move,
   MoveClient,
-  NamedAPIResource,
-  Pokemon,
-  PokemonClient,
-  PokemonSpecies,
-  Type,
-  UtilityClient,
+ 
 } from "pokenode-ts";
-import {
-  Box,
-  Button,
-  ButtonBase,
-  LinearProgress,
-  Popover,
-  Typography,
-} from "@mui/material";
-import { IconButton } from "@mui/material";
-import { Info } from "@mui/icons-material";
+
 import styled from "styled-components";
-import PokemonCard from "@/components/PokemonCard";
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from "next/link";
 import { DataGrid } from '@mui/x-data-grid';
@@ -51,91 +35,11 @@ const Main = styled.main`
   background-image: url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png);
   color: black;
 `;
-const Maincontainer = styled.main`
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-`;
-
-const ContainerData = styled.div`
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-`;
-const ContainerDataMain = styled.div`
-  display: grid;
-  grid-template-columns: 0.1fr 1fr;
-  gap: 1rem;
-  width: 100%;
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const ContainerCol = styled.div`
-  display: grid;
-  width: 100%;
-`;
-const ContainerColPokemon = styled.div`
-  display: grid;
-  width: 100%;
-  place-items: center;
-`;
-
-const ContainerMainData = styled.div`
-  display: grid;
-  width: 60%;
-  border-radius: 8px;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 1rem;
-  background-color: #30a7d7;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  color: white;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-    margin-top: 1rem;
-  }
-`;
-
-const AbilityData = styled.div`
-  padding: 1rem;
-`;
-
-const Description = styled.div`
-  width: 300px;
-`;
-
-const StatsContainer = styled.div`
-  flex: 1;
-  width: 100%;
-  display: grid;
-`;
-const ContainerEvolutions = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  width: 100%;
-place-content: center;
-
-  @media (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const ContainerTypes = styled.div`
-display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    place-items: center;
-
-`;
 
 
 
-const PokemonDetails = ({ params }: { params: { name: string } }) => {
+
+const PokemonDetails = () => {
 
 
   const columns = [
@@ -239,9 +143,7 @@ useEffect(() => {
     return typeColors[type] || "gainsboro"; // default color if type is not in the map
   };
 
-  const normalise = (value: number) => (value * 100) / 255;
 
- 
  
 
   return (

@@ -2,20 +2,16 @@
 import React, { useEffect, useState } from "react";
 import {
   NamedAPIResource,
-  NamedAPIResourceList,
-  Pokemon,
+ 
   PokemonClient,
-  UtilityClient,
 } from "pokenode-ts";
-import axios from "axios";
-import Link from "next/link";
+
 import styled from "styled-components";
 
-import { Button, InputAdornment, Skeleton, TextField } from "@mui/material";
+import { Button, InputAdornment, TextField } from "@mui/material";
 import PokemonCard from "@/components/PokemonCard";
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import styles from "@/app/page.module.css";
 
 const Main = styled.main`
   display: flex;

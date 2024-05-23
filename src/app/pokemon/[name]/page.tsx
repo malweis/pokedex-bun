@@ -1,13 +1,11 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useAppSelector } from "@/utils/usePokemon";
 import Image from "next/image";
 import {
   Ability,
-  EVOLUTION_TRIGGERS,
   EvolutionChain,
   NamedAPIResource,
-  Pokemon,
   PokemonClient,
   PokemonSpecies,
   Type,
@@ -16,7 +14,7 @@ import {
 import {
   Box,
   Button,
-  ButtonBase,
+ 
   LinearProgress,
   Popover,
   Typography,
