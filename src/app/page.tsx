@@ -12,6 +12,7 @@ import { Button, InputAdornment, TextField } from "@mui/material";
 import PokemonCard from "@/components/PokemonCard";
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import useFibonacci from "@/utils/useFibonacci";
 
 const Main = styled.main`
   display: flex;
@@ -37,6 +38,8 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [n, setN] = useState(20); // replace 10 with the initial desired length of the sequence
+  const sequence = useFibonacci(n);
 
   useEffect(() => {
     (async () => {
@@ -82,6 +85,11 @@ export default function Home() {
       setPage(page - 1);
     }
   };
+  useEffect(() => {
+    // do something with the sequence here
+    console.log(sequence);
+  }, [sequence]);
+
 
   return (
     <Main>
